@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 ggez = "0.7.0"
+nalgebra = { version = "0.30.1", features = ["mint"] }
 rand = "0.8.4"
