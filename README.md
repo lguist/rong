@@ -1,3 +1,4 @@
 # Rong
 Pong [Rust] Implementation.
-- Based on the 1972 version.
+- First project in rust
+- Graphics with [ggez](https://github.com/ggez/ggez)
