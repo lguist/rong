@@ -1,14 +1,33 @@
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::graphics::{self, Color, DrawParam};
 use ggez::event::{self, EventHandler};
+use ggez::input::keyboard::{self, KeyCode};
 use nalgebra::{Point2};
 
 const RACKET_HEIGHT: f32 = 150.0;
 const RACKET_WIDTH: f32 = 30.0;
 const RACKET_HEIGHT_HALF: f32 = RACKET_HEIGHT * 0.5;
 const RACKET_WIDTH_HALF: f32 = RACKET_WIDTH * 0.5;
-const BALL_SIZE: f32 = 45.0;
+const BALL_SIZE: f32 = 30.0;
 const BALL_SIZE_HALF: f32 = BALL_SIZE * 0.5;
+const PLAYER_SPEED: f32 = 600.0;
+
+fn clamp(value: &mut f32, low: f32, high: f32) {
+	if *value < low {
+		*value = low;
+	} else if *value > high {
+		*value = high;
+	}
+} 
+
+fn move_racket(pos: &mut Point2<f32>, keycode: KeyCode, y_dir: f32, ctx: &mut Context) {
+	let dt = ggez::timer::delta(ctx).as_secs_f32();
+	let screen_h = graphics::drawable_size(ctx).1;
+	if keyboard::is_key_pressed(ctx, keycode) {
+		pos.y += y_dir * PLAYER_SPEED * dt;
+	}
+	clamp(&mut pos.y, RACKET_HEIGHT_HALF, screen_h-RACKET_HEIGHT_HALF);
+}
 
 struct MainState {
     player_1_pos: Point2<f32>,
@@ -29,8 +48,12 @@ impl MainState {
 }
 
 impl EventHandler for MainState {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
-        Ok(())
+    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+		move_racket(&mut self.player_1_pos, KeyCode::W, -1.0, ctx);
+		move_racket(&mut self.player_1_pos, KeyCode::S, 1.0, ctx);
+		move_racket(&mut self.player_2_pos, KeyCode::Up, -1.0, ctx);
+		move_racket(&mut self.player_2_pos, KeyCode::Down, 1.0, ctx);
+		Ok(())
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
