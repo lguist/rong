@@ -115,9 +115,10 @@ impl EventHandler for MainState {
 		graphics::draw(ctx, &ball_mesh, draw_param)?;
 
 		let score_text = ggez::graphics::Text::new(format!("{}   {}", self.player_1_score, self.player_2_score));
-		let (screen_w, screen_h) = graphics::drawable_size(ctx);
-		let (screen_w_half, screen_h_half) = (screen_w * 0.5, screen_h * 0.5);
-		let score_pos = Point2::new(screen_w_half, screen_h_half);
+		let screen_w = graphics::drawable_size(ctx).0;
+		let screen_w_half = screen_w * 0.5;
+
+		let score_pos = Point2::new(screen_w_half, 50.0);
 		draw_param = draw_param.dest(score_pos);
 		graphics::draw(ctx, &score_text, draw_param)?;
 		
